@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>cities</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+	<link rel="stylesheet"  href="https://cdn.rawgit.com/Leaflet/Leaflet.markercluster/v0.4.0/dist/MarkerCluster.Default.css">
+<link rel="stylesheet"  href="https://cdn.rawgit.com/Leaflet/Leaflet.markercluster/v0.4.0/dist/MarkerCluster.css">
+<script src="https://cdn.rawgit.com/Leaflet/Leaflet.markercluster/v0.4.0/dist/leaflet.markercluster.js"></script>
+	<script src='http://code.jquery.com/jquery-2.1.0.min.js'></script>
+</head>
+<body>
+<div id="map" style="width: 700px;height: 500px"></div>
+
+<script>
+var map = L.map('map').setView([4.250, 2.500], 7);
+mapLink = 
+'<a href="http://openstreetmap.org">openstreetmap</a>,'+
+'<a href="http://mapsnigeriainitiative.wordpress.com">mapsnigeriainitiative</a>';
+L.tileLayer(
+'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+attribution: ' &copy; ' + mapLink,
+maxZoom: 22,
+}).addTo(map);
+var pointsCluster = L.markerClusterGroup();
+$.getJSON("https://cdn.rawgit.com/mayotunde/cluster/master/spots.geojson", function(data){
+var points = L.geoJson(data, {
+onEachFeature: function(feature, layer){
+layer.bindPopup(feature.properties.COUNTRY)
+}}).addTo(pointsCluster);
+});
+   
+var points = L.markerClusterGroup();
+$.getJSON("https://cdn.rawgit.com/mayotunde/cluster/master/spots.geojson", function(data){
+var spots = L.geoJson(data, {
+pointToLayer: function(feature, layer){
+var marker = new L.marker(latlng);
+marker.bindPopup(feature.properties.COUNTRY);
+return marker;
+}}).addTo(points);
+});
+   
+map.addLayer(pointsCluster);
+</script>
+</body>
+</html>
+Status 
